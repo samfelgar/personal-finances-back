@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+COMPOSE="docker-compose"
+ARGS=()
+
+if [ -f ./.env ]; then
+  source ./.env
+fi
+
+case "$1" in
+  start)
+    shift 1
+    ARGS+=(up -d)
+    ;;
+  stop)
+    shift 1
+    ARGS+=(down)
+    ;;
+  composer)
+    shift 1
+    ARGS+=(exec -it slim composer "$@")
+    ;;
+  mysql)
+    shift 1
+    ARGS+=(exec -it mariadb mysql -u "${DB_USERNAME:-root}" -p"${DB_PASSWORD:-root}" "${DB_DATABASE}")
+    ;;
+  *)
+    ARGS+=("$@")
+    ;;
+esac
+  
+"${COMPOSE[@]}" "${ARGS[@]}"
