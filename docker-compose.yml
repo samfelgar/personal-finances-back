@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  slim:
+    container_name: app
+    build: .
+    working_dir: /var/www
+    environment:
+      docker: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www
+      - logs:/var/www/logs
+  mariadb:
+    image: mariadb:latest
+    container_name: database
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+    volumes:
+      - database:/var/lib/mysql
+volumes:
+  logs:
+    driver: local
+  database:
+    driver: local
